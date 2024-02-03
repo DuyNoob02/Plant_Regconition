@@ -12,7 +12,6 @@ model = tf.keras.models.load_model(model_path)
 # Tạo converter
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 
-# Chuyển đổi mô hình
 tflite_model = converter.convert()
 
 # Lưu trữ mô hình TFLite vào tệp
