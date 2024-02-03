@@ -41,3 +41,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+detect_med_img/macos
+detect_med_img/test
+detect_med_img/linux
+detect_med_img/ios
+detect_med_img/windows
