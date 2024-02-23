@@ -1,7 +1,9 @@
 import 'package:detect_med_img/screens/result_screen.dart';
-import 'package:detect_med_img/service/predict.dart';
+// import 'package:detect_med_img/service/predict.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 class DisplayFeatureScreen extends StatefulWidget {
   final String imagePath;
@@ -13,55 +15,47 @@ class DisplayFeatureScreen extends StatefulWidget {
 }
 
 class _DisplayFeatureScreenState extends State<DisplayFeatureScreen> {
-  late PredictService _predictService;
+  // late PredictService _predictService;
   late bool _isPredicting = false;
-  late Map<String, dynamic> _predictionResult;
-  late File _imageFile;
+  // late Map<String, dynamic> _predictionResult;
 
-  @override
-  void initState() {
-    super.initState();
-    // _predictService = PredictService();
-    // _predictService.loadModel();
-    _initializePredictService();
-    _predictionResult = {};
-    _imageFile = File(widget.imagePath);
-  }
-
-  Future<void> _initializePredictService() async {
-    _predictService = PredictService();
-    await _predictService.loadModel();
-  }
-  // Futer
-
-  Future<void> _onCheckPressed() async {
+  Future<void> _onCheckPressed(BuildContext context) async {
     setState(() {
       _isPredicting = true;
     });
 
     try {
-      // final rawBytes = await _imageFile.readAsBytes();
-      // Goi predict khi check
-      var result = await _predictService.predictImage(_imageFile.path);
-      debugPrint(_imageFile.path);
-      setState(() {
-        _predictionResult = result;
-        _isPredicting = false;
-      });
+      var uri = Uri.parse('http://10.13.130.223:5000/predict');
+      var request = http.MultipartRequest('POST', uri);
+      request.files
+          .add(await http.MultipartFile.fromPath('image', widget.imagePath));
 
-      // Chuyển đến trang kết quả
-      final navigator = Navigator.of(context);
-      navigator.push(
-        MaterialPageRoute(
-          builder: (context) => ResultScreen(result: _predictionResult),
-        ),
-      );
+      var response = await request.send();
+      if (response.statusCode == 200) {
+        var jsonResponse = await response.stream.bytesToString();
+        var result = json.decode(jsonResponse);
+
+        setState(() {
+          _isPredicting = false;
+        });
+        print(result);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultScreen(result: result),
+          ),
+        );
+      } else {
+        setState(() {
+          _isPredicting = false;
+        });
+        print('Failed to get prediction. Status code: ${response.statusCode}');
+      }
     } catch (e) {
-      // Xu ly loi neu co
       setState(() {
         _isPredicting = false;
       });
-      debugPrint('Error predicting: $e');
+      print('Error predicting: $e');
     }
   }
 
@@ -88,7 +82,7 @@ class _DisplayFeatureScreenState extends State<DisplayFeatureScreen> {
                 CircleIconButton(
                   icon: Icons.check,
                   color: Colors.green,
-                  onPressed: () => _onCheckPressed(),
+                  onPressed: () => _onCheckPressed(context),
                 ),
               ],
             ),
