@@ -64,10 +64,13 @@ import io
 
 app = Flask(__name__)
 
+# pred_bp = Blueprint('pred', __name__)
 # Load the SavedModel
 model = load_model('../ResNet50Model')
 
+
 # Define the route for prediction
+# @app.route('/predict', methods=['POST'])
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get the image file from the request
@@ -96,5 +99,6 @@ def predict():
     })
 
 if __name__ == '__main__':
+    # app.run(debug=True)
     app.run(host='0.0.0.0', port=5000)
 
