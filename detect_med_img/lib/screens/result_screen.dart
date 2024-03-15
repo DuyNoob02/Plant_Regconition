@@ -143,7 +143,7 @@ class _ResultScreenState extends State<ResultScreen> {
     final response = await http.get(
       Uri.parse(
           // 'http://127.0.0.1:8008/plant/getPlantInfor/query?code=$classLabel'),
-          'http://192.168.1.50:8008/plant/getPlantInfor/query?code=$classLabel'),
+          'http://192.168.128.104:8008/plant/getPlantInfor/query?code=$classLabel'),
     );
     print(response.body);
     if (response.statusCode == 200) {
@@ -227,10 +227,15 @@ class PlantInfoWidget extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              color: Colors.blue,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Text(
                 'Mô tả',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             Text(
@@ -242,10 +247,14 @@ class PlantInfoWidget extends StatelessWidget {
             ),
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              color: Colors.blue,
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               child: Text(
                 'Thông tin dược liệu',
-                style: TextStyle(fontSize: 20),
+                style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               ),
             ),
             Text(

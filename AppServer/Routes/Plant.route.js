@@ -7,6 +7,6 @@ const uploadCloud = require('../Helper/Plant_cloudinary')
 route.get('/', PlantController.getPlant);
 route.get('/getPlantInfor/query', PlantController.getPlantInfo);
 route.post('/',uploadCloud.array('images'), PlantController.createPLantInfo);
-
+route.get('/search/query', PlantController.search)
 
 module.exports = route

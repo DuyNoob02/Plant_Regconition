@@ -24,6 +24,6 @@ const PlantSchema = new Schema({
     images: [{
         type: String,
     }],
-})
+},{ collection: 'Plant' });
 
 module.exports = Connection.model('Plant', PlantSchema)

@@ -25,7 +25,7 @@ class _DisplayFeatureScreenState extends State<DisplayFeatureScreen> {
     });
 
     try {
-      var uri = Uri.parse('http://192.168.1.50:5000/predict');
+      var uri = Uri.parse('http://192.168.128.104:5000/predict');
       var request = http.MultipartRequest('POST', uri);
       request.files
           .add(await http.MultipartFile.fromPath('image', widget.imagePath));

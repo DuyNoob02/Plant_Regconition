@@ -50,20 +50,43 @@ module.exports = {
     },
 
     getPlantInfo: async (req, res, next) => {
-    try {
-        const { code } = req.query;
-        console.log(code);
-        const result = await Plant.find({ code: code });
-        console.log(result);
-        if (result.length === 0) {
-            throw createError.NotFound('Can not find plant info');
+        try {
+            const { code } = req.query;
+            console.log(code);
+            const result = await Plant.find({ code: code });
+            console.log(result);
+            if (result.length === 0) {
+                throw createError.NotFound('Can not find plant info');
+            }
+            return res.status(200).json({
+                result
+            });
+        } catch (error) {
+            next(error);
         }
-        return res.status(200).json({
-            result
-        });
-    } catch (error) {
-        next(error);
+    },
+    search: async (req, res, next) => {
+        try {
+            const { query } = req.query;
+            console.log(query);
+            const result = await Plant.find({
+                $or: [
+                    { name: { $regex: new RegExp(query, 'i') } },
+                    { scientificName: { $regex: new RegExp(query, 'i') } },
+                    { description: { $regex: new RegExp(query, 'i') } },
+                    { info: { $regex: new RegExp(query, 'i') } }
+                ]
+            });
+            console.log(result);
+            if (result.length === 0) {
+                throw createError.NotFound('Không tìm thấy thông tin cây');
+            }
+            return res.status(200).json({
+                result
+            });
+        } catch (error) {
+            next(error);
+        }
     }
-}
 
 }

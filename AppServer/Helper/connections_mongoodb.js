@@ -7,6 +7,7 @@ function newConnection(uri){
         useUnifiedTopology: true
     })
 
+    
     conn.on('connected', function() {
         console.log(`Mongodb:::::connected:::::${this.name}`);
     })
@@ -15,10 +16,12 @@ function newConnection(uri){
         console.log(`Mongodb:::::disconneted:::::${this.name}`);
     })
 
+    
     conn.on('error', function(error){
         console.log(`Mongodb:::error:::${JSON.stringify(error)}`);
     })
 
+    
     conn.on('SIGINT', async()=>{
         console.log('Closing MongoDB connection....');
         await conn.close();
