@@ -66,7 +66,8 @@ app = Flask(__name__)
 
 # pred_bp = Blueprint('pred', __name__)
 # Load the SavedModel
-model = load_model('../ResNet50Model')
+# model = load_model('../ResNet50Model')
+model = load_model('https://drive.google.com/drive/folders/1-3qIBo3Hm-FZVxlqYzLyiIrlsoURmgfG?usp=sharing')
 
 
 # Define the route for prediction
