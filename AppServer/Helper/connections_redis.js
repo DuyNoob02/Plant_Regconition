@@ -2,8 +2,12 @@ const redis = require('redis');
 
 const client = redis.createClient({
     port: 6379,
-    host: "https://nodeserver-plant.onrender.com/"
+    host: "redis://red-co17rbcf7o1s73ca01u0"
 })
+// const client = redis.createClient({
+//     port: 6379,
+//     host: "127.0.0.1"
+// })
 
 client.ping((err, pong)=>{
     console.log(pong);
