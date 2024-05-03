@@ -143,7 +143,8 @@ class _ResultScreenState extends State<ResultScreen> {
     final response = await http.get(
       Uri.parse(
           // 'http://127.0.0.1:8008/plant/getPlantInfor/query?code=$classLabel'),
-          'http://192.168.128.104:8008/plant/getPlantInfor/query?code=$classLabel'),
+          // 'http://10.13.144.99:8008/plant/getPlantInfor/query?code=$classLabel'),
+          'http://192.168.128.107:8008/plant/getPlantInfor/query?code=$classLabel'),
     );
     print(response.body);
     if (response.statusCode == 200) {

@@ -13,7 +13,9 @@ import 'package:http/http.dart' as http;
 // import 'package:path_provider/path_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'MedApp',
       home: HomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
@@ -37,32 +40,44 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late String searchQuery;
+  late Map<String, dynamic> lastSearchedPlantInfo;
   late bool showPlantInfo;
   late Map<String, dynamic> plantInfo;
+  late String errorMessage;
   @override
   void initState() {
     super.initState();
     searchQuery = '';
     showPlantInfo = false;
     plantInfo = {};
+    errorMessage = '';
+    lastSearchedPlantInfo = {};
   }
 
   Future<void> searchPlant(String searchQuery) async {
     final url = Uri.parse(
-        'http://192.168.128.104:8008/plant/search/query?query=$searchQuery');
+        // 'http://10.13.144.99:8008/plant/search/query?query=$searchQuery');
+        'http://192.168.128.107:8008/plant/search/query?query=$searchQuery');
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
         setState(() {
+          lastSearchedPlantInfo = responseData;
           plantInfo = responseData;
           showPlantInfo = true;
         });
         print(responseData);
       } else {
+        setState(() {
+          errorMessage = 'Không tìm thấy thông tin cây thuốc.';
+        });
         throw Exception('Fail to load plant infomation');
       }
     } catch (e) {
+      setState(() {
+        errorMessage = 'Không tìm thấy thông tin cây thuốc.';
+      });
       print('Error fetching plant information: $e');
     }
   }
@@ -84,6 +99,10 @@ class _HomePageState extends State<HomePage> {
                     onChanged: (value) {
                       setState(() {
                         searchQuery = value;
+                        if (value.isEmpty) {
+                          lastSearchedPlantInfo = {};
+                          errorMessage = '';
+                        }
                       });
                     },
                     decoration: InputDecoration(
@@ -103,6 +122,10 @@ class _HomePageState extends State<HomePage> {
           // Padding(
 
           // ),
+          Text(
+            errorMessage ?? '',
+            style: TextStyle(color: Colors.red, fontStyle: FontStyle.italic),
+          ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -146,8 +169,8 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           Expanded(
               child: SingleChildScrollView(
-            child: showPlantInfo
-                ? PlantInfoWidget(plantInfo: plantInfo)
+            child: lastSearchedPlantInfo.isNotEmpty
+                ? PlantInfoWidget(plantInfo: lastSearchedPlantInfo)
                 : Container(),
           ))
         ],
